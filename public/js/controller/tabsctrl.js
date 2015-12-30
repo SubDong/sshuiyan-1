@@ -2117,6 +2117,73 @@ define(["app"], function (app) {
                             dataArray.push(obj);
                         }
                         $rootScope.$broadcast("LoadCompareDateShowDataFinish", item, contrast);
+                    } else if ($location.path().indexOf("indexoverview") != -1 || $location.path().indexOf("entrancepage") != -1) {
+                        // 受访页面，页面分析
+                        var wordArray = [];// 搜索词数组
+                        var aaaArray = [];
+                        var bbbArray = [];
+                        item.forEach(function (_record) {
+                            aaaArray.push(_record[target]);
+                            wordArray.push(_record[target]);
+                        });
+                        contrast.forEach(function (_record) {
+                            bbbArray.push(_record[target]);
+                            if (wordArray.indexOf(_record[target]) == -1) {// 判断搜索词是否已存在
+                                wordArray.push(_record[target]);
+                            }
+                        });
+                        for (var i = 0; i < wordArray.length; i++) {
+                            var a_i = aaaArray.indexOf(wordArray[i]);
+                            var b_i = bbbArray.indexOf(wordArray[i]);
+                            if (a_i != -1 && b_i != -1) {
+                                var obj = {};
+                                var _item_obj = item[a_i];
+                                var _contrast_obj = contrast[b_i];
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    var bili = ((parseInt(_item_obj[tt] + "".replace("%")) - parseInt((_contrast_obj[tt] + "").replace("%"))) / (parseInt((_contrast_obj[tt] + "").replace("%")) == 0 ? parseInt(_item_obj[tt] + "".replace("%")) : parseInt((_contrast_obj[tt] + "").replace("%"))) * 100).toFixed(2);
+                                    bili = isNaN(bili) ? "0.00%" : (bili + "%");
+                                    if (tt == "nuvRate" || tt == "outRate") {
+                                        obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + "," + getRateValue(_contrast_obj[tt]) + "," + bili;
+                                    } else if (tt == "avgTime") {
+                                        obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + "," + MillisecondToDate(_contrast_obj[tt]) + "," + bili;
+                                    } else {
+                                        obj[tt] = "　" + "," + _item_obj[tt] + "," + _contrast_obj[tt] + "," + bili;
+                                    }
+                                });
+                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(obj);
+                            }
+                            if (a_i != -1 && b_i == -1) {
+                                var obj = {};
+                                var _item_obj = item[a_i];
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    if (tt == "nuvRate" || tt == "outRate") {
+                                        obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + ",--,--";
+                                    } else if (tt == "avgTime") {
+                                        obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + ",--,--";
+                                    } else {
+                                        obj[tt] = "　" + "," + _item_obj[tt] + ",--,--";
+                                    }
+                                });
+                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(obj);
+                            }
+                            if (a_i == -1 && b_i != -1) {
+                                var obj = {};
+                                var _contrast_obj = contrast[b_i];
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    if (tt == "nuvRate" || tt == "outRate") {
+                                        obj[tt] = "　" + ",--," + getRateValue(_contrast_obj[tt]) + ",--";
+                                    } else if (tt == "avgTime") {
+                                        obj[tt] = "　" + ",--," + MillisecondToDate(_contrast_obj[tt]) + ",--";
+                                    } else {
+                                        obj[tt] = "　" + ",--," + _contrast_obj[tt] + ",--";
+                                    }
+                                });
+                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(obj);
+                            }
+                        }
                     } else {
                         item.forEach(function (a, b) {
                             var dataObj = {};
