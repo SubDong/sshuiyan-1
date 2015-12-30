@@ -87,9 +87,11 @@ api.get('/charts', function (req, res) {
         if (start == 0 && start == end && dimension == "period") {
             var nh = new Date().getHours();
             result.forEach(function (_obj) {
+                _obj.showValue = [];
                 _obj.quota.forEach(function (_o_q, n) {
+                    _obj.showValue[n] = _o_q;
                     if (n > nh) {
-                        _obj.quota[n] = "--";
+                        _obj.showValue[n] = "--";
                     }
                 });
             });

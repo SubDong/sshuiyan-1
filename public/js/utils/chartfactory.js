@@ -200,7 +200,11 @@ var op = {
                                 var _t = params[i].seriesName;
                                 var __t = _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
                                 if (chartConfig.toolTip == undefined) {
-                                    res += '<li class=chartstyle' + i + '>' + __t + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
+                                    if (params[i].series.toolTipQuota) {
+                                        res += '<li class=chartstyle' + i + '>' + __t + ' : ' + ad.formatFunc(params[i].series.toolTipQuota[params[i]["dataIndex"]], formatType) + '</li>';
+                                    } else {
+                                        res += '<li class=chartstyle' + i + '>' + __t + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
+                                    }
                                 } else {
                                     res += '<li class=chartstyle' + i + '>' + __t + ' : ' + params[i].value + '</li>';
                                 }
@@ -339,6 +343,9 @@ var op = {
                 barGap: "10%",
                 symbolSize: 1.5
             };
+            if (item.toolTipQuota) {
+                serie.toolTipQuota = item.toolTipQuota;
+            }
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
                     normal: {

@@ -428,6 +428,7 @@ var chartUtils = {
             var label = [];
             var key = [];
             var quota = [];
+            var toolTipQuota = [];
             label.push(data.label);
             var time = [];
             for (var i = 0; i < data.key.length; i++) {
@@ -481,6 +482,7 @@ var chartUtils = {
             //}
             var length = data.quota.length / 24;
             var final_tmp = [];
+            var final_tmp_t = [];
 
             for (var i = 0; i < data.quota.length; i++) {
                 var _y = i % 24;
@@ -506,9 +508,38 @@ var chartUtils = {
                     final_tmp[i] = parseInt(final_tmp[i]);
                 }
             }
+            if (data.showValue) {
+                for (var i = 0; i < data.showValue.length; i++) {
+                    var _y = i % 24;
+                    if (final_tmp_t[_y] == undefined) {
+                        final_tmp_t[_y] = "--";
+                    }
+                    if (data.showValue[i] != "--") {
+                        if (final_tmp_t[_y] == "--") {
+                            final_tmp_t[_y] = parseFloat(data.showValue[i]);
+                        } else {
+                            final_tmp_t[_y] += parseFloat(data.showValue[i]);
+                        }
+                    }
+                }
+
+                for (var i = 0; i < final_tmp_t.length; i++) {
+                    if (final_tmp_t[i] == "--") {
+                        continue;
+                    }
+                    if (data.label == "avgTime" || data.label == "outRate" || data.label == "nuvRate") {
+                        final_tmp_t[i] = (parseFloat(final_tmp_t[i]) / length).toFixed(2);
+                    } else {
+                        final_tmp_t[i] = parseInt(final_tmp_t[i]);
+                    }
+                }
+            }
             tmp["label"] = chartUtils.convertChinese(data.label);
             tmp["key"] = time;
             tmp["quota"] = final_tmp;
+            if (final_tmp_t.length != 0) {
+                tmp["toolTipQuota"] = final_tmp_t;
+            }
             final_result.push(tmp);
         });
         return final_result;
