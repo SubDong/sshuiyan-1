@@ -152,8 +152,6 @@ api.get('/adscharts', function (req, res) {
         dimension = null;
     }
     es_request.search(req.es, indexes, userType+"_ad_track", quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
-        console.log("********************************")
-        console.log(result)
         datautils.send(res, JSON.stringify(result));
     });
 });

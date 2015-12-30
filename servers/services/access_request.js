@@ -128,7 +128,7 @@ var access_request = {
                             },
                             "uv_aggs": {
                                 "cardinality": {
-                                    "field": "_ucv"
+                                    "field": "vid"
                                 }
                             },
                             "entrance_aggs": {
@@ -255,7 +255,7 @@ var access_request = {
                                                 },
                                                 "uv": {
                                                     "cardinality": {
-                                                        "field": "_ucv"
+                                                        "field": "vid"
                                                     }
                                                 }
                                             }
@@ -267,7 +267,7 @@ var access_request = {
                                         },
                                         "uv": {
                                             "cardinality": {
-                                                "field": "_ucv"
+                                                "field": "vid"
                                             }
                                         }
                                     }
@@ -350,14 +350,14 @@ var access_request = {
                                 },
                                 "uv": {
                                     "cardinality": {
-                                        "field": "_ucv"
+                                        "field": "vid"
                                     }
                                 }
                             }
                         },
                         "all_uv": {
                             "cardinality": {
-                                "field": "_ucv"
+                                "field": "vid"
                             }
                         },
                         "target_pv_uv": {
@@ -397,7 +397,7 @@ var access_request = {
                                 },
                                 "uv": {
                                     "cardinality": {
-                                        "field": "_ucv"
+                                        "field": "vid"
                                     }
                                 }
                             }

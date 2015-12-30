@@ -39,7 +39,7 @@ var initial = {
                     },
                     "uv": {
                         "value_count": {
-                            "field": "_ucv"
+                            "field": "vid"
                         }
                     },
                     "jump": {
@@ -257,7 +257,7 @@ var initial = {
                     }
                 }
                 break;
-            case "_ucv":
+            case "vid":
                 taggs = {
                     "data_count": {
                         "cardinality": {
@@ -368,7 +368,7 @@ var initial = {
                     value[item] = {"value_count": {"field": "tt"}};
                     break;
                 case "uv":
-                    value[item] = {"value_count": {"field": "_ucv"}};
+                    value[item] = {"value_count": {"field": "vid"}};
                     break;
                 case "ct":
                     value[item] = {"sum": {"script": "v1=0; if (doc['ct'].value != 0) { v1 +=1;};v1"}};

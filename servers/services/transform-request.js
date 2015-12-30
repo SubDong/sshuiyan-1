@@ -16,7 +16,7 @@ var es_aggs = {
     "uv": {
         "uv": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "vid"
             }
         }
     },
@@ -39,7 +39,7 @@ var es_aggs = {
             "aggs": {
                 "new_visitor": {
                     "cardinality": {
-                        "field": "_ucv"
+                        "field": "vid"
                     }
                 }
             }
@@ -56,14 +56,14 @@ var es_aggs = {
             "aggs": {
                 "new_visitor": {
                     "cardinality": {
-                        "field": "_ucv"
+                        "field": "vid"
                     }
                 }
             }
         },
         "uv": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "vid"
             }
         }
 

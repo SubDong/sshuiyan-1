@@ -29,7 +29,7 @@ var heaturl_request = {
                                 "aggs": {
                                     "uv": {
                                         "cardinality": {
-                                            "field": "_ucv"
+                                            "field": "vid"
                                         }
                                     }
                                 }

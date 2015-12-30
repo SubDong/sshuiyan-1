@@ -60,7 +60,7 @@
           },
           "uv_aggs": {
             "cardinality": {
-              "field": "_ucv"
+              "field": "vid"
             }
           }
         }
