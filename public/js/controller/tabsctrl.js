@@ -2136,52 +2136,49 @@ define(["app"], function (app) {
                             var a_i = aaaArray.indexOf(wordArray[i]);
                             var b_i = bbbArray.indexOf(wordArray[i]);
                             if (a_i != -1 && b_i != -1) {
-                                var obj = {};
                                 var _item_obj = item[a_i];
                                 var _contrast_obj = contrast[b_i];
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
                                     var bili = ((parseInt(_item_obj[tt] + "".replace("%")) - parseInt((_contrast_obj[tt] + "").replace("%"))) / (parseInt((_contrast_obj[tt] + "").replace("%")) == 0 ? parseInt(_item_obj[tt] + "".replace("%")) : parseInt((_contrast_obj[tt] + "").replace("%"))) * 100).toFixed(2);
                                     bili = isNaN(bili) ? "0.00%" : (bili + "%");
                                     if (tt == "nuvRate" || tt == "outRate") {
-                                        obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + "," + getRateValue(_contrast_obj[tt]) + "," + bili;
+                                        _item_obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + "," + getRateValue(_contrast_obj[tt]) + "," + bili;
                                     } else if (tt == "avgTime") {
-                                        obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + "," + MillisecondToDate(_contrast_obj[tt]) + "," + bili;
+                                        _item_obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + "," + MillisecondToDate(_contrast_obj[tt]) + "," + bili;
                                     } else {
-                                        obj[tt] = "　" + "," + _item_obj[tt] + "," + _contrast_obj[tt] + "," + bili;
+                                        _item_obj[tt] = "　" + "," + _item_obj[tt] + "," + _contrast_obj[tt] + "," + bili;
                                     }
                                 });
-                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
-                                dataArray.push(obj);
+                                _item_obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(_item_obj);
                             }
                             if (a_i != -1 && b_i == -1) {
-                                var obj = {};
                                 var _item_obj = item[a_i];
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
                                     if (tt == "nuvRate" || tt == "outRate") {
-                                        obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + ",--,--";
+                                        _item_obj[tt] = "　" + "," + getRateValue(_item_obj[tt]) + ",--,--";
                                     } else if (tt == "avgTime") {
-                                        obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + ",--,--";
+                                        _item_obj[tt] = "　" + "," + MillisecondToDate(_item_obj[tt]) + ",--,--";
                                     } else {
-                                        obj[tt] = "　" + "," + _item_obj[tt] + ",--,--";
+                                        _item_obj[tt] = "　" + "," + _item_obj[tt] + ",--,--";
                                     }
                                 });
-                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
-                                dataArray.push(obj);
+                                _item_obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(_item_obj);
                             }
                             if (a_i == -1 && b_i != -1) {
-                                var obj = {};
                                 var _contrast_obj = contrast[b_i];
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
                                     if (tt == "nuvRate" || tt == "outRate") {
-                                        obj[tt] = "　" + ",--," + getRateValue(_contrast_obj[tt]) + ",--";
+                                        _contrast_obj[tt] = "　" + ",--," + getRateValue(_contrast_obj[tt]) + ",--";
                                     } else if (tt == "avgTime") {
-                                        obj[tt] = "　" + ",--," + MillisecondToDate(_contrast_obj[tt]) + ",--";
+                                        _contrast_obj[tt] = "　" + ",--," + MillisecondToDate(_contrast_obj[tt]) + ",--";
                                     } else {
-                                        obj[tt] = "　" + ",--," + _contrast_obj[tt] + ",--";
+                                        _contrast_obj[tt] = "　" + ",--," + _contrast_obj[tt] + ",--";
                                     }
                                 });
-                                obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
-                                dataArray.push(obj);
+                                _contrast_obj[target] = wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率"
+                                dataArray.push(_contrast_obj);
                             }
                         }
                     } else {
