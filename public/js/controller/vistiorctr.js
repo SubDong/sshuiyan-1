@@ -146,7 +146,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
                 case "tt":
                     title_name = "访问次数";
                     break;
-                case "_ucv":
+                case "vid":
                     title_name = "访客数(UV)";
                     break;
                 case "ct":

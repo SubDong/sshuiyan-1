@@ -22,7 +22,7 @@
         },
         "aggs": {
           "pv_aggs": {"sum": {"script": "c=0; c+=doc['loc'].values.size(); c"}},
-          "uv_aggs": {"cardinality": {"field": "_ucv"}}
+          "uv_aggs": {"cardinality": {"field": "vid"}}
         }
       }
     }

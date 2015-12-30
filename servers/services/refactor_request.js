@@ -14,7 +14,7 @@ var _new_visitor_aggs = {
     "aggs": {
         "new_visitor_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "vid"
             }
         }
     }
@@ -60,7 +60,7 @@ var es_aggs = {
     "uv": {
         "uv_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "vid"
             }
         }
     },
@@ -138,7 +138,7 @@ var es_aggs = {
         "new_visitor_aggs": _new_visitor_aggs,
         "uv_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "vid"
             }
         }
     },
@@ -881,7 +881,7 @@ var es_request = {
                 };
                 request.body.aggs["all_uv"] = {
                     "cardinality": {
-                        "field": "_ucv"
+                        "field": "vid"
                     }
                 }
                 request.body.aggs["all_nuv"] = _new_visitor_aggs
@@ -932,7 +932,7 @@ var es_request = {
                 };
                 request.body.aggs.result.aggs["all_uv"] = {
                     "cardinality": {
-                        "field": "_ucv"
+                        "field": "vid"
                     }
                 }
                 request.body.aggs.result.aggs["all_nuv"] = _new_visitor_aggs
@@ -941,7 +941,7 @@ var es_request = {
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
                 request.body.aggs["all_uv"] = {
                     "cardinality": {
-                        "field": "_ucv"
+                        "field": "vid"
                     }
                 }
                 request.body.aggs["all_nuv"] = _new_visitor_aggs
