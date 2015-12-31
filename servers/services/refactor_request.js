@@ -202,7 +202,7 @@ var buildMustQuery = function (filters) {
                     }
                 });
             } else {
-                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}"||JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\": [0]}]") {
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}" || JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\":0}]") {
                     mustQuery.push({
                         "term": {
                             "entrance": 1
@@ -835,122 +835,49 @@ var pageConversionFn = function (result) {
 };
 
 var es_request = {
-    search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
+    searchNewVisit: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
         var request = null;
         var _aggs = null;
-        switch (topN[0]) {
-            case "-1":  // circle topN, 适用于单一指标
-                var mustQuery = buildMustQuery(filters);
-                mustQuery.push({
-                    "range": {
-                        "utime": {
-                            "from": start, "to": end
-                        }
-                    }
-                });
-
-                for (var key in es_aggs[quotas[0]]) {
-                    _aggs = {
-                        "top_hit": es_aggs[quotas[0]][key]
-                    };
-                }
-
-                request = {
-                    "index": indexes,
-                    "type": type,
-                    "body": {
-                        "query": {
-                            "bool": {
-                                "must": mustQuery
-                            }
-                        },
-                        "size": 0,
-                        "aggs": {
-                            "result": {
-                                "terms": {
-                                    "field": dimension,
-                                    "order": {
-                                        "top_hit": "desc"
-                                    },
-                                    "size": topN[1]
-                                },
-                                "aggs": _aggs
-                            }
-                        }
-                    }
-                };
-                request.body.aggs["all_uv"] = {
-                    "cardinality": {
-                        "field": "vid"
-                    }
-                }
-                request.body.aggs["all_nuv"] = _new_visitor_aggs
-                break;
-            case "-2":  // period topN, 适用于单一指标, 结果由调用者处理
-                for (var _key in es_aggs[quotas[0]]) {
-                    _aggs = {
-                        "top_hit": es_aggs[quotas[0]][_key]
-                    };
-                }
-                request = {
-                    "index": indexes,
-                    "type": type,
-                    "body": {
-                        "query": buildQuery(filters),
-                        "size": 0,
-                        "aggs": {
-                            "result": {
-                                "date_histogram": {
-                                    "field": "utime",
-                                    "interval": interval / 1000 + "s",
-                                    "format": "yyyy-MM-dd HH:mm:ss",
-                                    "time_zone": "+08:00",
-                                    "order": {
-                                        "_key": "asc"
-                                    },
-                                    "min_doc_count": 0,
-                                    "extended_bounds": {
-                                        "min": start,
-                                        "max": end
-                                    }
-                                },
-                                "aggs": {
-                                    "dimension": {
-                                        "terms": {
-                                            "field": dimension.split(",")[1],
-                                            "order": {
-                                                "top_hit": "desc"
-                                            },
-                                            "size": topN[1]
-                                        },
-                                        "aggs": _aggs
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-                request.body.aggs.result.aggs["all_uv"] = {
-                    "cardinality": {
-                        "field": "vid"
-                    }
-                }
-                request.body.aggs.result.aggs["all_nuv"] = _new_visitor_aggs
-                break;
-            default :
-                request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
-                request.body.aggs["all_uv"] = {
-                    "cardinality": {
-                        "field": "vid"
-                    }
-                }
-                request.body.aggs["all_nuv"] = _new_visitor_aggs
-
-                break;
+        request = buildRequest(indexes, type, quotas, dimension, [{"entrance":"entrancetrue"}], start, end, interval);
+        request.body.aggs["all_uv"] = {
+            "cardinality": {
+                "field": "vid"
+            }
         }
-
+        request.body.aggs.result.aggs.single_visitor_aggs = {
+            "filter": {
+                "term": {
+                    "ct": 0
+                }
+            },
+            "aggs": {
+                "single_visitor_aggs": {
+                    "terms": {
+                        "field": "tt",
+                        "size": 0,
+                        "min_doc_count": 2
+                    }
+                }
+            }
+        }
+        request.body.aggs.result.aggs.cpv_aggs = {
+            "filter": {
+                "term": {
+                    "ct": 0
+                }
+            },
+            "aggs": {
+                "cpv_aggs": {
+                    "value_count": {
+                        "field": "entrance"
+                    }
+                }
+            }
+        }
+        //console.log(request)
+        request.body.aggs["all_nuv"] = _new_visitor_aggs
         //var cacheKey = cacheutils.fixCacheKey(request);
-        //console.log("********************refactor request*********************")
+        //console.log("********************refactor request searchNewVisit*********************")
         //console.log(JSON.stringify(request))
         es.search(request, function (error, response) {
             var data = [];
@@ -1035,6 +962,213 @@ var es_request = {
             }
         });
     },
+
+    search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
+            if (JSON.stringify(filters) == "[{\"entrance\":\"entrancetrue\"},{\"ct\":0}]") {
+            es_request.searchNewVisit(es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn)
+        } else {
+            var request = null;
+            var _aggs = null;
+            switch (topN[0]) {
+                case "-1":  // circle topN, 适用于单一指标
+                    var mustQuery = buildMustQuery(filters);
+                    mustQuery.push({
+                        "range": {
+                            "utime": {
+                                "from": start, "to": end
+                            }
+                        }
+                    });
+
+                    for (var key in es_aggs[quotas[0]]) {
+                        _aggs = {
+                            "top_hit": es_aggs[quotas[0]][key]
+                        };
+                    }
+
+                    request = {
+                        "index": indexes,
+                        "type": type,
+                        "body": {
+                            "query": {
+                                "bool": {
+                                    "must": mustQuery
+                                }
+                            },
+                            "size": 0,
+                            "aggs": {
+                                "result": {
+                                    "terms": {
+                                        "field": dimension,
+                                        "order": {
+                                            "top_hit": "desc"
+                                        },
+                                        "size": topN[1]
+                                    },
+                                    "aggs": _aggs
+                                }
+                            }
+                        }
+                    };
+                    request.body.aggs["all_uv"] = {
+                        "cardinality": {
+                            "field": "vid"
+                        }
+                    }
+                    request.body.aggs["all_nuv"] = _new_visitor_aggs
+                    break;
+                case "-2":  // period topN, 适用于单一指标, 结果由调用者处理
+                    for (var _key in es_aggs[quotas[0]]) {
+                        _aggs = {
+                            "top_hit": es_aggs[quotas[0]][_key]
+                        };
+                    }
+                    request = {
+                        "index": indexes,
+                        "type": type,
+                        "body": {
+                            "query": buildQuery(filters),
+                            "size": 0,
+                            "aggs": {
+                                "result": {
+                                    "date_histogram": {
+                                        "field": "utime",
+                                        "interval": interval / 1000 + "s",
+                                        "format": "yyyy-MM-dd HH:mm:ss",
+                                        "time_zone": "+08:00",
+                                        "order": {
+                                            "_key": "asc"
+                                        },
+                                        "min_doc_count": 0,
+                                        "extended_bounds": {
+                                            "min": start,
+                                            "max": end
+                                        }
+                                    },
+                                    "aggs": {
+                                        "dimension": {
+                                            "terms": {
+                                                "field": dimension.split(",")[1],
+                                                "order": {
+                                                    "top_hit": "desc"
+                                                },
+                                                "size": topN[1]
+                                            },
+                                            "aggs": _aggs
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    request.body.aggs.result.aggs["all_uv"] = {
+                        "cardinality": {
+                            "field": "vid"
+                        }
+                    }
+                    request.body.aggs.result.aggs["all_nuv"] = _new_visitor_aggs
+                    break;
+                default :
+                    request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+                    request.body.aggs["all_uv"] = {
+                        "cardinality": {
+                            "field": "vid"
+                        }
+                    }
+                    request.body.aggs["all_nuv"] = _new_visitor_aggs
+
+                    break;
+            }
+
+            //var cacheKey = cacheutils.fixCacheKey(request);
+            //console.log("********************refactor request*********************")
+            //console.log(JSON.stringify(request))
+            es.search(request, function (error, response) {
+                var data = [];
+                if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
+                    var result = response.aggregations.result.buckets;
+
+                    if (!result) {
+                        result = [];
+                        result.push(response.aggregations.result);
+                    }
+                    if (dimension == null && interval == 0) {
+                        callbackFn(result);
+                    } else {
+                        if (dimension != null && dimension.split(",").length > 1) {
+                            callbackFn(result);
+                        } else {
+                            quotas.forEach(function (quota) {
+                                switch (quota) {
+                                    case "pv":
+                                        data.push(pvFn(result));
+                                        break;
+                                    case "contribution":
+                                        data.push(contributionFn(result));
+                                        break;
+                                    case "uv":
+                                        var tempuv = uvFn(result)
+                                        tempuv["all_uv"] = response.aggregations.all_uv.value
+                                        tempuv["all_nuv"] = response.aggregations.all_nuv.new_visitor_aggs.value
+                                        data.push(tempuv);
+                                        break;
+                                    case "vc":
+                                        data.push(vcFn(result));
+                                        break;
+                                    case "avgTime":
+                                        data.push(avgTimeFn(result));
+                                        break;
+                                    case "outRate":
+                                        data.push(outRateFn(result));
+                                        break;
+                                    case "svc":
+                                        data.push(svcFn(result));
+                                        break;
+                                    case "arrivedRate":
+                                        data.push(arrivedRateFn(result));
+                                        break;
+                                    case "avgPage":
+                                        data.push(avgPageFn(result));
+                                        break;
+                                    case "conversions":
+                                        data.push(conversionsFn(result));
+                                        break;
+                                    case "pageConversion" :
+                                        data.push(pageConversionFn(result));
+                                        break;
+                                    case "eventConversion":
+                                        data.push(eventConversionFn(result));
+                                        break;
+                                    case "ip":
+                                        data.push(ipFn(result));
+                                        break;
+                                    case "nuv":
+                                        data.push(nuvFn(result));
+                                        break;
+                                    case "nuvRate":
+                                        var temp = nuvRateFn(result)
+                                        temp["all_uv"] = response.aggregations.all_uv.value
+                                        temp["all_nuv"] = response.aggregations.all_nuv.new_visitor_aggs.value
+                                        data.push(temp);
+                                        break;
+                                    case "entrance":
+                                        data.push(entranceFn(result));
+                                        break;
+                                    default :
+                                        break;
+                                }
+                            });
+                            callbackFn(data);
+                        }
+                    }
+                } else {
+                    callbackFn(data);
+                }
+            });
+        }
+    },
+
+
     // 获取近30分钟的访问数据
     realTimeSearch: function (es, index, type, filters, callbackFn) {
         var endTime = new Date().getTime();
@@ -1179,7 +1313,7 @@ var es_request = {
         });
         if (filters != null) {
             filters.forEach(function (filter) {
-                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}"||JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\": [0]}]") {
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}" || JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\":0}]") {
                     mustQuery.push({
                         "term": {
                             "entrance": 1

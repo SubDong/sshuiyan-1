@@ -440,7 +440,6 @@ api.get('/indextable', function (req, res) {
                         }
 
                         if(info.label == "uv"||info.label == "nuvRate"){
-                            console.log(info.label)
                             obj["all_uv"] = info["all_uv"]
                         }
                         maps[infoKey] = obj;
