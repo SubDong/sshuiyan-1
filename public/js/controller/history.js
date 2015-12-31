@@ -316,6 +316,11 @@ define(['./module'], function (ctrs) {
             } else {
                 chart.config.keyFormat = "day";
             }
+            if ($rootScope.start > -6) {
+                $rootScope.interval = -1;
+                chart.config.keyFormat = "day";
+                chart.config.bGap=true;
+            }
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -467,7 +472,7 @@ define(['./module'], function (ctrs) {
                             body: _tableBody
                         }
                     },
-                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                    {text: '\nPower by www.best-ad.cn', style: 'header'}
                 ],
                 styles: {
                     header: {
