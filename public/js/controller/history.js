@@ -314,6 +314,8 @@ define(['./module'], function (ctrs) {
                                     var ecSum = 0;
                                     if (final_result[i] && final_result[i].data) {
                                         console.log(final_result[i].data);
+                                        console.log($scope.webName);
+                                        console.log(final_result[i].data.hasOwnProperty($scope.webName));
                                         if (final_result[i].data.hasOwnProperty($scope.webName)) {
                                             ecSum = final_result[i].data[$scope.webName];
                                         }
