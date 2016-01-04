@@ -277,8 +277,49 @@ define(['./module'], function (ctrs) {
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
                     + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=day&type=" + esType
                 }).success(function (data, status) {
-                    $scope.$broadcast("history", data);
-                    $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
+                    var filters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    if ($location.path() == "/page/indexoverview_ep/history") { //退出模块
+                        var rf_type = -1;
+                        var se = -1;
+                        var isNew = -1;
+                        if (filters != null) {
+                            var index;
+                            rf_type = (index = filters.elementHasOwnProperty("rf_type")) == -1 ? -1 : filters[index].rf_type[0];
+                            se = (index = filters.elementHasOwnProperty("se")) == -1 ? -1 : filters[index].se[0];
+                            if (se != -1) {
+                                se = $rootScope.browsersKeyMap[se];
+                            }
+                            isNew = (index = filters.elementHasOwnProperty("ct")) == -1 ? -1 : filters[index].ct[0];
+                        }
+                        var parameter = {
+                            type: $rootScope.userType,
+                            rf_type: rf_type,
+                            se: se,
+                            isNew: isNew,
+                            start: $rootScope.tableTimeStart,
+                            end: $rootScope.tableTimeEnd
+                        };
+                        var url = "/gacache/queryECData?query=" + JSON.stringify(parameter);
+
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (exitCountDatas) {
+                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                            data.forEach(function (trData) {
+                                if (exitCountDatas.hasOwnProperty(trData.loc)) {
+                                    trData.ec = exitCountDatas[trData.loc];
+                                } else {
+                                    trData.ec = "0";
+                                }
+                            });
+                            $scope.$broadcast("history", data);
+                            $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
+                        });
+                    } else {
+                        $scope.$broadcast("history", data);
+                        $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
+                    }
                     $rootScope.historyJu = "";
                 }).error(function (error) {
                     console.log(error);
