@@ -285,9 +285,19 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
                     if ($rootScope.webSite && $rootScope.webSite == 1) {
-                        var obj = {name: "来源网站", displayName: "来源网站", field: "dm", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"}
+                        var obj = {
+                            name: "来源网站",
+                            displayName: "来源网站",
+                            field: "dm",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                        }
                     } else {
-                        var obj = {name: "来源类型", displayName: "来源类型", field: "rf_type", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"}
+                        var obj = {
+                            name: "来源类型",
+                            displayName: "来源类型",
+                            field: "rf_type",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                        }
                     }
                     $rootScope.gridArray = [
                         {
@@ -384,7 +394,7 @@ define(["../app"], function (app) {
                 }
                 case "source_adsrfsearchengine" :
                 {
-                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -401,9 +411,9 @@ define(["../app"], function (app) {
                             enableSorting: false
                         },
                         {
-                            name: "访问次数",
-                            displayName: "访问次数",
-                            field: "vc",
+                            name: "浏览量(PV)",
+                            displayName: "浏览量(PV)",
+                            field: "pv",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                             sort: {
                                 direction: uiGridConstants.DESC,
@@ -417,21 +427,21 @@ define(["../app"], function (app) {
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                         },
                         {
-                            name: "新访客比率",
-                            displayName: "新访客比率",
-                            field: "nuvRate",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-                        },
-                        {
-                            name: "平均访问页数",
-                            displayName: "平均访问页数",
-                            field: "avgPage",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-                        },
-                        {
                             name: "IP数",
                             displayName: "IP数",
                             field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            field: "outRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问时长",
+                            displayName: "平均访问时长",
+                            field: "avgTime",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                         }
                     ];
@@ -898,7 +908,7 @@ define(["../app"], function (app) {
                 }
                 case "default_page_conv" :
                 {
-                    $rootScope.checkedArray = ["pv", "uv", "vc", "ip", "conversions","crate"]
+                    $rootScope.checkedArray = ["pv", "uv", "vc", "ip", "conversions", "crate"]
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -1447,6 +1457,7 @@ define(["../app"], function (app) {
                 }
             }
         }
+
         return {
             getQuotaByType: getQuotaByType,
             getQuotaGridByType: getQuotaGridByType,
