@@ -3,7 +3,7 @@
  */
 define(['./module'], function (ctrs) {
     'use strict';
-    ctrs.controller('history', function ($cookieStore, $scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('history', function ($cookieStore, $scope, $window, $location, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
         if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
             $rootScope.gridArray = [];
             var temp_path = $location.path();
@@ -272,9 +272,6 @@ define(['./module'], function (ctrs) {
                 })
             } else {
                 $rootScope.tableSwitch.number = 0;
-                if ($location.path() == "/page/indexoverview_ep/history") {
-                    $rootScope.tableSwitch.latitude.field = "loc";
-                }
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
@@ -294,30 +291,43 @@ define(['./module'], function (ctrs) {
                             }
                             isNew = (index = filters.elementHasOwnProperty("ct")) == -1 ? -1 : filters[index].ct[0];
                         }
-                        var parameter = {
-                            type: $rootScope.userType,
-                            rf_type: rf_type,
-                            se: se,
-                            isNew: isNew,
-                            start: $rootScope.tableTimeStart,
-                            end: $rootScope.tableTimeEnd
-                        };
-                        var url = "/gacache/queryECData?query=" + JSON.stringify(parameter);
 
-                        $http({
-                            method: 'GET',
-                            url: url
-                        }).success(function (exitCountDatas) {
-                            data.forEach(function (trData) {
-                                if (exitCountDatas.hasOwnProperty(trData.loc)) {
-                                    trData.ec = exitCountDatas[trData.loc];
-                                } else {
-                                    trData.ec = "0";
-                                }
-                            });
-                            $scope.$broadcast("history", data);
-                            $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
+                        var ecArrays = [];
+                        data.forEach(function (data_record, i) {
+                            var parameter = {
+                                type: $rootScope.userType,
+                                rf_type: rf_type,
+                                se: se,
+                                isNew: isNew,
+                                start: $rootScope.tableTimeStart - i,
+                                end: $rootScope.tableTimeStart - i
+                            };
+
+                            ecArrays.push("/gacache/queryECData?query=" + JSON.stringify(parameter))
                         });
+
+                        console.log(ecArrays);
+
+                        if (ecArrays.length > 0) {
+                            $q.all(ecArrays).then(function (final_result) {
+                                console.log(final_result);
+                                data.forEach(function (data_record, i) {
+                                    var ecSum = 0;
+                                    if (final_result[i] && final_result[i].data) {
+                                        if (final_result[i].data.hasOwnProperty($scope.webName)) {
+                                            data_record.ec = final_result[i].data[$scope.webName];
+                                        }
+                                    }
+                                    data_record.ec = ecSum;
+                                });
+                            });
+                        } else {
+                            data.forEach(function (trData) {
+                                trData.ec = "0";
+                            });
+                        }
+                        $scope.$broadcast("history", data);
+                        $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                     } else {
                         $scope.$broadcast("history", data);
                         $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
