@@ -318,14 +318,16 @@ define(['./module'], function (ctrs) {
                                     }
                                     data_record.ec = ecSum;
                                 });
+                                $scope.$broadcast("history", data);
+                                $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                             });
                         } else {
                             data.forEach(function (trData) {
                                 trData.ec = "0";
                             });
+                            $scope.$broadcast("history", data);
+                            $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                         }
-                        $scope.$broadcast("history", data);
-                        $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                     } else {
                         $scope.$broadcast("history", data);
                         $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
