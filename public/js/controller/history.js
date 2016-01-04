@@ -308,16 +308,12 @@ define(['./module'], function (ctrs) {
 
                         if (ecArrays.length > 0) {
                             $q.all(ecArrays).then(function (final_result) {
-                                console.log(final_result);
                                 data.forEach(function (data_record, i) {
-                                    console.log(data_record);
                                     var ecSum = 0;
                                     if (final_result[i] && final_result[i].data) {
-                                        console.log(final_result[i].data);
-                                        console.log($scope.webName);
-                                        console.log(final_result[i].data.hasOwnProperty($scope.webName));
-                                        if (final_result[i].data.hasOwnProperty($scope.webName)) {
-                                            ecSum = final_result[i].data[$scope.webName];
+                                        var _t_name = $scope.webName.substr(1, $scope.webName.length - 2);
+                                        if (final_result[i].data.hasOwnProperty(_t_name)) {
+                                            ecSum = final_result[i].data[_t_name];
                                         }
                                     }
                                     data_record.ec = ecSum;
