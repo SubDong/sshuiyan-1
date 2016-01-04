@@ -299,18 +299,15 @@ define(['./module'], function (ctrs) {
                                 rf_type: rf_type,
                                 se: se,
                                 isNew: isNew,
-                                start: $rootScope.tableTimeStart - i,
-                                end: $rootScope.tableTimeStart - i
+                                start: $rootScope.tableTimeStart + i,
+                                end: $rootScope.tableTimeStart + i
                             };
 
-                            ecArrays.push("/gacache/queryECData?query=" + JSON.stringify(parameter))
+                            ecArrays.push($http.get("/gacache/queryECData?query=" + JSON.stringify(parameter)));
                         });
-
-                        console.log(ecArrays);
 
                         if (ecArrays.length > 0) {
                             $q.all(ecArrays).then(function (final_result) {
-                                console.log(final_result);
                                 data.forEach(function (data_record, i) {
                                     var ecSum = 0;
                                     if (final_result[i] && final_result[i].data) {
