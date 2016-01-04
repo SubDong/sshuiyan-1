@@ -305,7 +305,6 @@ define(['./module'], function (ctrs) {
                             method: 'GET',
                             url: url
                         }).success(function (exitCountDatas) {
-                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                             data.forEach(function (trData) {
                                 if (exitCountDatas.hasOwnProperty(trData.loc)) {
                                     trData.ec = exitCountDatas[trData.loc];
