@@ -272,6 +272,9 @@ define(['./module'], function (ctrs) {
                 })
             } else {
                 $rootScope.tableSwitch.number = 0;
+                if ($location.path() == "/page/indexoverview_ep/history") {
+                    $rootScope.tableSwitch.latitude.field = "loc";
+                }
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
